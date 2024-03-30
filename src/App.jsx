@@ -7,11 +7,13 @@ import Profile from "./pages/profile/Profile.jsx";
 import Settings from "./pages/settings/Settings.jsx";
 import Search from "./pages/search/Search.jsx";
 import NotFound from "./pages/notfound/NotFound.jsx";
+import NavBar from "./components/NavBar.jsx";
 
 function App() {
 
     return (
         <>
+            <NavBar/>
             <Routes>
                 <Route path="/" element={<Home/>}/>
                 <Route path="/signup" element={<SignUp/>}/>
