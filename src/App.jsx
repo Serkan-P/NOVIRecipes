@@ -1,5 +1,5 @@
 import "./App.css";
-import {Route, Routes} from "react-router-dom";
+import {Navigate, Route, Routes} from "react-router-dom";
 import Home from "./pages/home/Home.jsx";
 import SignUp from "./pages/signup/SignUp.jsx";
 import SignIn from "./pages/signin/SignIn.jsx";
@@ -21,7 +21,8 @@ function App() {
                 <Route path="/profile" element={<Profile/>}/>
                 <Route path="/settings" element={<Settings/>}/>
                 <Route path="/search" element={<Search/>}/>
-                <Route path="*" element={<NotFound/>}/>
+                <Route path="/notfound" element={<NotFound/>}/>
+                <Route path="*" element={<Navigate to="/notfound"/>}/>
             </Routes>
         </>
     )
