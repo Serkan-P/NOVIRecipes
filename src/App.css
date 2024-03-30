@@ -40,3 +40,11 @@
 .read-the-docs {
   color: #888;
 }
+
+.active-menu-link {
+  border-bottom: 1px solid black;
+}
+
+.default-menu-link {
+  border-bottom: none;
+}

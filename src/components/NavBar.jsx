@@ -1,15 +1,15 @@
-import {Link} from "react-router-dom";
+import {NavLink} from "react-router-dom";
 
 function NavBar() {
     return (
         <nav>
             <ul>
-                <li><Link to="/">Home</Link></li>
-                <li><Link to="/signup">Sign Up</Link></li>
-                <li><Link to="/signin">Sign In</Link></li>
-                <li><Link to="/profile">Profile</Link></li>
-                <li><Link to="/settings">Settings</Link></li>
-                <li><Link to="/search">Search</Link></li>
+                <li><NavLink className={({ isActive }) => isActive ? 'active-menu-link' : 'default-menu-link'} to="/">Home</NavLink></li>
+                <li><NavLink className={({ isActive }) => isActive ? 'active-menu-link' : 'default-menu-link'} to="/signup">Sign Up</NavLink></li>
+                <li><NavLink className={({ isActive }) => isActive ? 'active-menu-link' : 'default-menu-link'} to="/signin">Sign In</NavLink></li>
+                <li><NavLink className={({ isActive }) => isActive ? 'active-menu-link' : 'default-menu-link'} to="/profile">Profile</NavLink></li>
+                <li><NavLink className={({ isActive }) => isActive ? 'active-menu-link' : 'default-menu-link'} to="/settings">Settings</NavLink></li>
+                <li><NavLink className={({ isActive }) => isActive ? 'active-menu-link' : 'default-menu-link'} to="/search">Search</NavLink></li>
             </ul>
         </nav>
     );
