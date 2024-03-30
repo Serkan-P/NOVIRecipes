@@ -21,8 +21,9 @@ function App() {
                 <Route path="/profile" element={<Profile/>}/>
                 <Route path="/settings" element={<Settings/>}/>
                 <Route path="/search" element={<Search/>}/>
-                <Route path="/notfound" element={<NotFound/>}/>
-                <Route path="*" element={<Navigate to="/notfound"/>}/>
+                <Route path="*" element={<NotFound/>}/>
+
+
             </Routes>
         </>
     )
