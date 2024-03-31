@@ -2,6 +2,7 @@ import "./SignIn.css";
 import {useContext, useEffect, useState} from "react";
 import {AuthContext} from "../../context/AuthContext.jsx";
 import axios from "axios";
+import {Link} from "react-router-dom";
 
 function SignIn() {
     const [username, setUsername] = useState("");
@@ -76,6 +77,7 @@ function SignIn() {
                     Sign in
                 </button>
             </form>
+            <p>Don&apos;t have a account yet? Sign up <Link to="/signup">here</Link>.</p>
         </>
     );
 }

@@ -13,6 +13,8 @@ function AuthContextProvider({children}) {
         status: "pending",
     });
 
+    const source = axios.CancelToken.source();
+
     useEffect(() => {
         const token = localStorage.getItem("tokenNOVI");
 
@@ -25,30 +27,30 @@ function AuthContextProvider({children}) {
                 status: "done",
             });
         }
-
+        return function cleanup() {
+            source.cancel();
+        }
     }, [])
     const navigate = useNavigate();
 
     async function login(token) {
         localStorage.setItem("tokenNOVI", token);
         const decodedToken = jwtDecode(token);
-        // console.log(decodedToken.sub);
+        const username = decodedToken.sub;
 
         try {
-            const response = await axios.get(`https://api.datavortex.nl/novirecipes/users/${decodedToken.sub}`, {
+            const response = await axios.get(`https://api.datavortex.nl/novirecipes/users/${username}`, {
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`,
                 },
             });
-            // console.log(response);
-
             setAuth({
+                ...auth,
                 isAuth: true,
                 user: {
                     username: response.data.username,
                     email: response.data.email,
-                    // id: response.data.id,
                 },
                 status: "done",
             });
@@ -57,12 +59,6 @@ function AuthContextProvider({children}) {
             logout();
         }
         console.log("User is signed in!");
-        // const path = window.location.pathname;
-        // if (path === "/" || path === "/signin") {
-        //     console.log("what is this?");
-        // } else {
-        //     navigate("/profile");
-        // }
         navigate("/profile");
     }
 
@@ -78,9 +74,9 @@ function AuthContextProvider({children}) {
     }
 
     const contextData = {
-        isAuth: auth.isAuth,
-        login: login,
-        logout: logout,
+        ...auth,
+        login,
+        logout,
     };
 
     return (
