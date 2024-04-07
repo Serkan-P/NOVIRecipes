@@ -8,7 +8,7 @@ export const FavoritesContext = createContext({});
 function FavoritesContextProvider({children}) {
     const {user} = useContext(AuthContext);
     const [favorites, setFavorites] = useState({
-        fav: null,
+        fav: [],
         status: "pending",
     });
 
@@ -21,7 +21,7 @@ function FavoritesContextProvider({children}) {
             void fetchFavorites();
         } else {
             setFavorites({
-                fav: null,
+                fav: [],
                 status: "done",
             });
         }
@@ -31,53 +31,66 @@ function FavoritesContextProvider({children}) {
     }, []);
 
     async function fetchFavorites() {
-        const username = user.username;
         try {
-            const response = await axios.get(`https://api.datavortex.nl/novirecipes/users/${username}`, {
+            const response = await axios.get(`https://api.datavortex.nl/novirecipes/users/${user.username}`, {
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`,
                 },
                 cancelToken: source.token,
             });
-            console.log(response.data.info);
-            let favArray = [];
-            favArray = response.data.info
+            // console.log(response.data.info);
+            const retrievedArray = JSON.parse(response.data.info);
+            // console.log(retrievedArray);
             setFavorites({
-                fav: favArray,
+                fav: retrievedArray,
                 status: "done",
             });
-            // console.log(favorites.fav.);
+            // console.log(favorites.fav);
         } catch (e) {
             console.error(e);
             setFavorites({
-                fav: null,
+                fav: [],
                 status: "done",
             });
         }
     }
 
-    // async function addToFavorites(favToAdd) {
-    //     const newFavs = favorites + `, ${favToAdd}`;
-    //     try {
-    //         const response = await axios.put(`https://api.datavortex.nl/novirecipes/users/${username}`, {
-    //             "info": newFavs,
-    //         }, {
-    //             headers: {
-    //                 "Content-Type": "application/json",
-    //                 "Authorization": `Bearer ${token}`,
-    //             },
-    //         });
-    //         console.log(response);
-    //         await fetchFavorites();
-    //     } catch (e) {
-    //         console.error(e);
-    //     }
-    // }
+    async function updateFavStatus(favToUpdate) {
+        // console.log(`Link: ${favToUpdate}`);
+        // console.log(favorites.fav);
+
+        if (favorites.fav.includes(favToUpdate)) {
+            // console.log("In here");
+            favorites.fav.splice(favorites.fav.indexOf(favToUpdate, 1));
+        } else {
+            // console.log("Not here");
+            favorites.fav.push(favToUpdate);
+            // console.log(favorites.fav);
+        }
+
+        const uriString = JSON.stringify(favorites.fav);
+        // console.log(uriString);
+
+        try {
+            const response = await axios.put(`https://api.datavortex.nl/novirecipes/users/${user.username}`, {
+                "info": uriString,
+            }, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                },
+            });
+            console.log(response);
+            await fetchFavorites();
+        } catch (e) {
+            console.error(e);
+        }
+    }
 
     function clearFavContext() {
         setFavorites({
-            fav: null,
+            fav: [],
             status: "done",
         });
     }
@@ -85,6 +98,7 @@ function FavoritesContextProvider({children}) {
     const contextData = {
         ...favorites,
         fetchFavorites,
+        updateFavStatus,
         clearFavContext,
     };
 

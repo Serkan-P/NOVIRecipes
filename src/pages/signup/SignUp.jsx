@@ -31,6 +31,7 @@ function SignUp() {
                 "username": username,
                 "email": email,
                 "password": password,
+                "info": "[]",
             }, {
                 cancelToken: source.token,
                 headers: {

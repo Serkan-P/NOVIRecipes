@@ -10,7 +10,7 @@ function Profile() {
 
     useEffect(() => {
         document.title = "Profile";
-        fetchFavorites()
+        fetchFavorites();
     }, []);
 
     return (
@@ -20,9 +20,16 @@ function Profile() {
                 <h2>User info</h2>
                 <p><strong>Username:</strong> {user.username}</p>
                 <p><strong>Email:</strong> {user.email}</p>
-                <p><strong>Favorites:</strong> {fav}</p>
+                <p><strong>Favorites:</strong></p>
+                {fav.length > 0 ?
+                    <ul>
+                        {fav.map((recipe) => {
+                            return <li key={recipe}>{recipe}</li>
+                        })}
+                    </ul> :
+                    <p>No recipe added</p>
+                }
             </section>
-
 
             <p>Back to <Link to="/">homepage</Link></p>
         </>

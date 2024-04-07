@@ -10,7 +10,7 @@ function NavBar() {
 
     const navigate = useNavigate();
 
-    function signOut(){
+    function signOut() {
         clearFavContext();
         logout();
     }
@@ -25,13 +25,13 @@ function NavBar() {
                     </h3>
                 </span>
             </NavLink>
-            <NavLink className={({isActive}) => isActive ? 'active-menu-link' : 'default-menu-link'}
+            <NavLink className={({isActive}) => isActive ? "active-menu-link" : "default-menu-link"}
                      to="/">Home</NavLink>
-            <NavLink className={({isActive}) => isActive ? 'active-menu-link' : 'default-menu-link'}
+            <NavLink className={({isActive}) => isActive ? "active-menu-link" : "default-menu-link"}
                      to="/searchrecipe">Search recipe</NavLink>
-            <NavLink className={({isActive}) => isActive ? 'active-menu-link' : 'default-menu-link'}
+            <NavLink className={({isActive}) => isActive ? "active-menu-link" : "default-menu-link"}
                      to="/profile">Profile</NavLink>
-            <NavLink className={({isActive}) => isActive ? 'active-menu-link' : 'default-menu-link'}
+            <NavLink className={({isActive}) => isActive ? "active-menu-link" : "default-menu-link"}
                      to="/settings">Settings</NavLink>
 
             {isAuth ?
