@@ -32,7 +32,6 @@ function FavoritesContextProvider({children}) {
 
     async function fetchFavorites() {
         const username = user.username;
-
         try {
             const response = await axios.get(`https://api.datavortex.nl/novirecipes/users/${username}`, {
                 headers: {
@@ -41,10 +40,14 @@ function FavoritesContextProvider({children}) {
                 },
                 cancelToken: source.token,
             });
+            console.log(response.data.info);
+            let favArray = [];
+            favArray = response.data.info
             setFavorites({
-                fav: response.data.info,
+                fav: favArray,
                 status: "done",
             });
+            // console.log(favorites.fav.);
         } catch (e) {
             console.error(e);
             setFavorites({
@@ -54,9 +57,35 @@ function FavoritesContextProvider({children}) {
         }
     }
 
+    // async function addToFavorites(favToAdd) {
+    //     const newFavs = favorites + `, ${favToAdd}`;
+    //     try {
+    //         const response = await axios.put(`https://api.datavortex.nl/novirecipes/users/${username}`, {
+    //             "info": newFavs,
+    //         }, {
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //                 "Authorization": `Bearer ${token}`,
+    //             },
+    //         });
+    //         console.log(response);
+    //         await fetchFavorites();
+    //     } catch (e) {
+    //         console.error(e);
+    //     }
+    // }
+
+    function clearFavContext() {
+        setFavorites({
+            fav: null,
+            status: "done",
+        });
+    }
+
     const contextData = {
         ...favorites,
         fetchFavorites,
+        clearFavContext,
     };
 
     return (

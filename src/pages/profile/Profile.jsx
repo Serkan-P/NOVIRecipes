@@ -10,7 +10,7 @@ function Profile() {
 
     useEffect(() => {
         document.title = "Profile";
-        fetchFavorites();
+        fetchFavorites()
     }, []);
 
     return (

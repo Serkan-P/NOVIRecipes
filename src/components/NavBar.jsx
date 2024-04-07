@@ -2,10 +2,18 @@ import {NavLink, useNavigate} from "react-router-dom";
 import {useContext} from "react";
 import {AuthContext} from "../context/AuthContext.jsx";
 import logo from "../../public/vite.svg"
+import {FavoritesContext} from "../context/FavoritesContext.jsx";
 
 function NavBar() {
     const {isAuth, user, logout} = useContext(AuthContext);
+    const {clearFavContext} = useContext(FavoritesContext);
+
     const navigate = useNavigate();
+
+    function signOut(){
+        clearFavContext();
+        logout();
+    }
 
     return (
         <nav>
@@ -29,7 +37,7 @@ function NavBar() {
             {isAuth ?
                 <div className="navUser">
                     <span>Welcome {user.username} </span>
-                    <button type="button" onClick={logout}>Sign out</button>
+                    <button type="button" onClick={signOut}>Sign out</button>
                 </div>
                 :
                 <div>

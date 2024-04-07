@@ -1,7 +1,8 @@
 import "./SearchRecipe.css";
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import axios from "axios";
 import badge from "/src/assets/Edamam_Badge_Light.svg";
+import {FavoritesContext} from "../../context/FavoritesContext.jsx";
 
 
 function SearchRecipe() {
@@ -14,6 +15,8 @@ function SearchRecipe() {
     const [loading, toggleLoading] = useState(false);
 
     const source = axios.CancelToken.source();
+
+    // const {addToFavorites} = useContext(FavoritesContext);
 
     useEffect(() => {
         document.title = "SearchRecipe";
@@ -58,6 +61,11 @@ function SearchRecipe() {
         }
         toggleLoading(false);
     }
+
+    // void function handleAddToFav(e) {
+    //     e.preventDefault();
+    //     addToFavorites(e);
+    // }
 
     return (
         <>
@@ -158,6 +166,8 @@ function SearchRecipe() {
                                         alt={data.label + " image"}/>
                                     <br/>
                                     {data.label}
+                                    {/*<br/>*/}
+                                    {/*<button onClick={handleAddToFav(recipe._links.self.href)}>Add to Favorites</button>*/}
                                     <br/>
                                     <a href={data.url}>Link to recipe.</a>
                                 </p>
