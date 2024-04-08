@@ -1,4 +1,4 @@
-import {createContext, useContext, useEffect, useState} from "react";
+import {createContext, useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import axios from "axios";
 import {jwtDecode} from "jwt-decode";
@@ -7,7 +7,7 @@ import isTokenValid from "../helpers/isTokenValid.js";
 export const AuthContext = createContext({});
 
 function AuthContextProvider({children}) {
-    const [auth, setAuth] = useState({
+    const [isAuth, setAuth] = useState({
         isAuth: false,
         user: null,
         status: "pending",
@@ -19,6 +19,7 @@ function AuthContextProvider({children}) {
         const token = localStorage.getItem("tokenNOVI");
 
         if (token && isTokenValid(token)) {
+            console.log("Token still valid!");
             void login(token);
         } else {
             setAuth({
@@ -33,7 +34,7 @@ function AuthContextProvider({children}) {
     }, [])
     const navigate = useNavigate();
 
-    async function login(token) {
+    async function login(token, redirectUrl) {
         localStorage.setItem("tokenNOVI", token);
         const decodedToken = jwtDecode(token);
         const username = decodedToken.sub;
@@ -46,7 +47,6 @@ function AuthContextProvider({children}) {
                 },
             });
             setAuth({
-                ...auth,
                 isAuth: true,
                 user: {
                     username: response.data.username,
@@ -59,7 +59,9 @@ function AuthContextProvider({children}) {
             logout();
         }
         console.log("User is signed in!");
-        navigate("/profile");
+        if (redirectUrl) {
+            navigate(redirectUrl);
+        }
     }
 
     function logout() {
@@ -74,14 +76,14 @@ function AuthContextProvider({children}) {
     }
 
     const contextData = {
-        ...auth,
+        ...isAuth,
         login,
         logout,
     };
 
     return (
         <AuthContext.Provider value={contextData}>
-            {auth.status === "done" ? children : <p>Loading...</p>}
+            {isAuth.status === "done" ? children : <p>Loading...</p>}
         </AuthContext.Provider>
     );
 }

@@ -12,7 +12,7 @@ import {useContext} from "react";
 import {AuthContext} from "./context/AuthContext.jsx";
 
 function App() {
-    const { isAuth } = useContext(AuthContext);
+    const {isAuth} = useContext(AuthContext);
 
     return (
         <>
@@ -21,12 +21,10 @@ function App() {
                 <Route path="/" element={<Home/>}/>
                 <Route path="/signup" element={<SignUp/>}/>
                 <Route path="/signin" element={<SignIn/>}/>
-                <Route path="/profile" element={isAuth ? <Profile /> : <Navigate to="/" />} />
-                <Route path="/settings" element={isAuth ? <Settings /> : <Navigate to="/" />} />
-                <Route path="/searchrecipe" element={isAuth ? <SearchRecipe /> : <Navigate to="/" />} />
+                <Route path="/profile" element={isAuth ? <Profile/> : <Navigate to="/"/>}/>
+                <Route path="/settings" element={isAuth ? <Settings/> : <Navigate to="/"/>}/>
+                <Route path="/searchrecipe" element={isAuth ? <SearchRecipe/> : <Navigate to="/"/>}/>
                 <Route path="*" element={<NotFound/>}/>
-
-
             </Routes>
         </>
     )

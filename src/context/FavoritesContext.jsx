@@ -8,7 +8,8 @@ export const FavoritesContext = createContext({});
 function FavoritesContextProvider({children}) {
     const {user} = useContext(AuthContext);
     const [favorites, setFavorites] = useState({
-        fav: [],
+        favURI: [],
+        favRecipe: [],
         status: "pending",
     });
 
@@ -21,7 +22,8 @@ function FavoritesContextProvider({children}) {
             void fetchFavorites();
         } else {
             setFavorites({
-                fav: [],
+                favURI: [],
+                favRecipe: [],
                 status: "done",
             });
         }
@@ -39,42 +41,65 @@ function FavoritesContextProvider({children}) {
                 },
                 cancelToken: source.token,
             });
-            // console.log(response.data.info);
+            console.log(response.data.info);
             const retrievedArray = JSON.parse(response.data.info);
-            // console.log(retrievedArray);
+            console.log(retrievedArray);
+
+
             setFavorites({
-                fav: retrievedArray,
+                ...favorites,
+                favURI: retrievedArray,
                 status: "done",
             });
-            // console.log(favorites.fav);
+
+            retrievedArray.map(uri => {
+                console.log("test1");
+                (async () => {
+                    console.log("test2");
+                    try {
+                        console.log("test3");
+                        const response = await axios.get(`https://api.edamam.com/api/recipes/v2/by-uri?type=public&uri=${encodeURIComponent(uri)}&app_id=${import.meta.env.VITE_EDAMAM_APP_ID}&app_key=${import.meta.env.VITE_EDAMAM_API_KEY}`);
+                        console.log(response.data.hits);
+
+                        setFavorites(prevState => ({
+                            ...prevState,
+                            favRecipe: [...prevState.favRecipe, ...response.data.hits],
+                        }));
+                    } catch (e) {
+                        console.log("test4");
+                        console.error(e);
+                    }
+                    console.log(favorites.favRecipe);
+                    console.log("test5");
+                })();
+            });
+
+            // console.log(favorites.favURI);
         } catch (e) {
             console.error(e);
             setFavorites({
-                fav: [],
+                favURI: [],
+                favRecipe: [],
                 status: "done",
             });
         }
     }
 
     async function updateFavStatus(favToUpdate) {
-        // console.log(`Link: ${favToUpdate}`);
-        // console.log(favorites.fav);
-
-        if (favorites.fav.includes(favToUpdate)) {
-            // console.log("In here");
-            favorites.fav.splice(favorites.fav.indexOf(favToUpdate, 1));
-        } else {
-            // console.log("Not here");
-            favorites.fav.push(favToUpdate);
-            // console.log(favorites.fav);
-        }
-
-        const uriString = JSON.stringify(favorites.fav);
-        // console.log(uriString);
-
         try {
+            let updatedFavURI = [...favorites.favURI];
+
+            if (updatedFavURI.includes(favToUpdate)) {
+                updatedFavURI = updatedFavURI.filter(uri => uri !== favToUpdate);
+            } else {
+                updatedFavURI.push(favToUpdate);
+            }
+
+            const uriArrayToString = JSON.stringify(updatedFavURI);
+            console.log(uriArrayToString);
+
             const response = await axios.put(`https://api.datavortex.nl/novirecipes/users/${user.username}`, {
-                "info": uriString,
+                "info": uriArrayToString,
             }, {
                 headers: {
                     "Content-Type": "application/json",
@@ -82,15 +107,36 @@ function FavoritesContextProvider({children}) {
                 },
             });
             console.log(response);
-            await fetchFavorites();
-        } catch (e) {
-            console.error(e);
+
+            const updatedFavRecipePromises = updatedFavURI.map(async uri => {
+                try {
+                    const recipeResponse = await axios.get(`https://api.edamam.com/api/recipes/v2/by-uri?type=public&uri=${encodeURIComponent(uri)}&app_id=${import.meta.env.VITE_EDAMAM_APP_ID}&app_key=${import.meta.env.VITE_EDAMAM_API_KEY}`);
+                    return recipeResponse.data.hits;
+                } catch (error) {
+                    console.error(error);
+                    return null;
+                }
+            });
+            console.log(updatedFavRecipePromises);
+
+            const updatedFavRecipeResults = await Promise.all(updatedFavRecipePromises);
+            const updatedFavRecipe = updatedFavRecipeResults.filter(recipe => recipe !== null).flat();
+
+            setFavorites({
+                ...favorites,
+                favURI: updatedFavURI,
+                favRecipe: updatedFavRecipe,
+            });
+
+        } catch (error) {
+            console.error(error);
         }
     }
 
     function clearFavContext() {
         setFavorites({
-            fav: [],
+            favURI: [],
+            favRecipe: [],
             status: "done",
         });
     }

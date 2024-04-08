@@ -4,6 +4,7 @@ import axios from "axios";
 import badge from "/src/assets/Edamam_Badge_Light.svg";
 import {FavoritesContext} from "../../context/FavoritesContext.jsx";
 import {cuisineTypeArray, mealTypeArray, dishTypeArray} from "/src/constants/edamamQueryOptions.js";
+import RecipeCard from "../../components/RecipeCard.jsx";
 
 function SearchRecipe() {
     const [recipes, setRecipes] = useState([]);
@@ -16,7 +17,7 @@ function SearchRecipe() {
 
     const source = axios.CancelToken.source();
 
-    const {fav, updateFavStatus} = useContext(FavoritesContext);
+    const {favURI, updateFavStatus} = useContext(FavoritesContext);
 
     useEffect(() => {
         document.title = "SearchRecipe";
@@ -64,6 +65,10 @@ function SearchRecipe() {
 
     function handleFavStatus(e) {
         updateFavStatus(e);
+    }
+
+    function onRecipeLinkInNewTab(url) {
+        window.open(url, "_blank");
     }
 
     return (
@@ -128,33 +133,22 @@ function SearchRecipe() {
                 </button>
             </form>
             <br/>
-            {!loading ?
+            {!loading ? (
                 <ul>
                     {recipes.length > 0 &&
-                        recipes.map((recipe) => {
-                            const data = recipe.recipe;
-                            return <li key={data.uri}>
-                                <p>
-                                    <img
-                                        className="recipe-image"
-                                        src={data.image}
-                                        alt={data.label + " image"}/>
-                                    <br/>
-                                    {data.label}
-                                    <br/>
-                                    <button
-                                        onClick={() => handleFavStatus(data.uri)}>{fav.includes(data.uri) ? "Remove from favorites" : "Add to favorites"}</button>
-                                    <br/>
-                                    <a href={data.url}>Link to recipe.</a>
-                                </p>
-                            </li>
-                        })
-                    }
+                        recipes.map((recipe) => (
+                            <RecipeCard
+                                key={recipe.recipe.uri}
+                                recipe={recipe}
+                                onRecipeLinkClick={onRecipeLinkInNewTab}
+                                onFavoriteButtonClick={handleFavStatus}
+                                isFavorite={favURI.includes(recipe.recipe.uri)}
+                            />
+                        ))}
                 </ul>
-                : <p>Loading...</p>
-            }
-
-
+            ) : (
+                <h3>Loading...</h3>
+            )}
         </>
     );
 }
