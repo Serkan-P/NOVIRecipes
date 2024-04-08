@@ -35,7 +35,7 @@ function SignIn() {
                 },
             });
             // console.log(response.data.jwt);
-            login(response.data.jwt);
+            login(response.data.jwt, "/profile");
         } catch (e) {
             console.error(e.response.data)
             toggleError(e.response.data);
