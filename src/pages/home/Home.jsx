@@ -4,9 +4,13 @@ import {cuisineTypeArray, dishTypeArray, mealTypeArray} from "../../constants/ed
 import axios from "axios";
 import RecipeCard from "../../components/RecipeCard.jsx";
 import {FavoritesContext} from "../../context/FavoritesContext.jsx";
-
+import {AuthContext} from "/src/context/AuthContext.jsx";
+import {useNavigate} from "react-router-dom";
 
 function Home() {
+    const {isAuth} = useContext(AuthContext);
+    const navigate = useNavigate();
+
     const {favURI, updateFavStatus} = useContext(FavoritesContext);
     const [dailyRecipe, setDailyRecipe] = useState(null);
 
@@ -19,7 +23,11 @@ function Home() {
     }, []);
 
     function handleFavStatus(e) {
-        updateFavStatus(e);
+        if (isAuth) {
+            updateFavStatus(e);
+        } else {
+            navigate("/signin");
+        }
     }
 
     function onRecipeLinkInNewTab(url) {

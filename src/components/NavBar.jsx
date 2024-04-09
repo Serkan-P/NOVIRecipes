@@ -1,7 +1,7 @@
 import {NavLink, useNavigate} from "react-router-dom";
 import {useContext} from "react";
 import {AuthContext} from "../context/AuthContext.jsx";
-import logo from "../../public/vite.svg"
+import logo from "/src/assets/HeaderLogo.png"
 import {FavoritesContext} from "../context/FavoritesContext.jsx";
 
 function NavBar() {
@@ -16,24 +16,28 @@ function NavBar() {
     }
 
     return (
-        <nav>
+        <nav className="header">
             <NavLink to="/">
-                <span className="logo-container">
-                    <img src={logo} alt="logo"/>
-                    <h3>
+                <span className="logoContainer">
+                    <img src={logo} alt="logo" className="logoImage"/>
+                    <span className="logoName">
                       NOVI Recipes
-                    </h3>
+                    </span>
                 </span>
             </NavLink>
+
             <NavLink className={({isActive}) => isActive ? "active-menu-link" : "default-menu-link"}
                      to="/">Home</NavLink>
-            <NavLink className={({isActive}) => isActive ? "active-menu-link" : "default-menu-link"}
-                     to="/searchrecipe">Search recipe</NavLink>
-            <NavLink className={({isActive}) => isActive ? "active-menu-link" : "default-menu-link"}
-                     to="/profile">Profile</NavLink>
-            <NavLink className={({isActive}) => isActive ? "active-menu-link" : "default-menu-link"}
-                     to="/settings">Settings</NavLink>
 
+            {isAuth && <>
+                <NavLink className={({isActive}) => isActive ? "active-menu-link" : "default-menu-link"}
+                         to="/searchrecipe">Search recipe</NavLink>
+                <NavLink className={({isActive}) => isActive ? "active-menu-link" : "default-menu-link"}
+                         to="/profile">Profile</NavLink>
+                <NavLink className={({isActive}) => isActive ? "active-menu-link" : "default-menu-link"}
+                         to="/settings">Settings</NavLink>
+            </>
+            }
             {isAuth ?
                 <div className="navUser">
                     <span>Welcome {user.username} </span>

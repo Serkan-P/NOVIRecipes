@@ -22,6 +22,11 @@ function Profile() {
         window.open(url, "_blank");
     }
 
+    function topFunction() {
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+    }
+
     return (
         <>
             <h1>Profile</h1>
@@ -29,7 +34,7 @@ function Profile() {
                 <h2>User info</h2>
                 <p><strong>Username:</strong> {user.username}</p>
                 <p><strong>Email:</strong> {user.email}</p>
-                <p><strong>Favorites:</strong></p>
+                <h2>Favorites:</h2>
                 {favRecipe.length > 0 ? (
                     <ul>
                         {favRecipe.map((recipe, index) => (
@@ -47,7 +52,7 @@ function Profile() {
                 )}
             </section>
 
-            <p>Back to <Link to="/">homepage</Link></p>
+            <button onClick={topFunction} className="BackToTop">Go to top</button>
         </>
     );
 }
